@@ -45,6 +45,8 @@
 
     $projectQuery = "SELECT * FROM project WHERE Company_ID = '$companyID' ORDER BY Project_date DESC";
     $resultProjects = mysqli_query($conn, $projectQuery);
+
+    // echo "<script>alert('COMPANY ID: $selectedCompanyID')</script>";
     ?>
 
 <!DOCTYPE html>
@@ -170,8 +172,9 @@
         </aside>
 
 <div class="content">
-    <h2>Create Project</h2>
-    <form method="post" action="process_create_project.php?Company_id=<?php echo $row['Company_ID']; ?>">
+    <h2>Create Project</h2> 
+    <form method="post" action="process_create_project.php?Company_id=<?php echo $_GET['Company_id']; ?>">
+
       
         <label for="projectName">Project Name:</label>
         <input type="text" id="projectName" name="projectName" required><br><br>

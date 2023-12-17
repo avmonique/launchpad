@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Company - Launchpad</title>
-    <link rel="icon" href="/launchpad/images/favicon.svg" />
+    <link rel="icon" href="images/favicon.svg" />
         <link rel="stylesheet" href="css/navbar.css">
         <link rel="stylesheet" href="css/create_company.css">  
 </head>
@@ -148,8 +148,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </a>
                 <?php if ($hasCompany): ?>
                 <?php foreach ($resultCompany as $row): ?>
+                    
                     <a href="company_view.php?Company_id=<?php echo $row['Company_ID']; ?>">
-                    <!-- <a href="company.php"> -->
                         <button>
                             <span class="<?php echo 'btn-company-created'; ?>">
                                 <div class="circle-avatar">

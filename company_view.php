@@ -120,7 +120,6 @@
                         <?php else: ?>
                             <a href="company_view.php?Company_id=<?php echo $row['Company_ID']; ?>">
                         <?php endif; ?>
-                        <!-- <a href="company.php"> -->
                             <button>
                                 <span class="<?php echo 'btn-company-created'; ?>">
                                     <div class="circle-avatar">
@@ -166,8 +165,8 @@
                 <h1><?php echo $companyName ?>'s projects <span class="forspace"></span><span> <a href="#"><img src="images/options.png" alt="options-icon" height="30px"></a></span> </h1>
             </div>
                 <div class="content">
-                
-        <a href="create-project.php?Company_id=<?php echo $row['Company_ID']; ?>" class="project-card2">
+                <a href="create-project.php?Company_id=<?php echo $_GET['Company_id']; ?>" class="project-card2">        
+        
             <br><br>
             <img src="images/add-company-icon.png" alt="add-icon" width="30px">
             <h3>Create new project</h3>

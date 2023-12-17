@@ -7,6 +7,8 @@ if (empty($_SESSION["email"])) {
 }
 
 $userEmail = $_SESSION["email"];
+$selectedCompanyID = isset($_GET['Company_id']) ? $_GET['Company_id'] : null;
+
 if (isset($userEmail)) {
     $checkCompanyQuery = "SELECT c.*, s.Student_ID 
                         FROM company_registration c
@@ -29,10 +31,11 @@ if ($hasCompany) {
     $companyID = $row["Company_ID"];
     $companyName = $row["Company_name"];
     $companyLogo = $row["Company_logo"]; 
-}else{
-    header("Location: index.php");
-    exit();
 }
+// else{
+//     header("Location: index.php");
+//     exit();
+// }
 ?>
 
 <!DOCTYPE html>
@@ -94,7 +97,6 @@ if ($hasCompany) {
                 <?php if ($hasCompany): ?>
                 <?php foreach ($resultCompany as $row): ?>
                     <a href="company_view.php?Company_id=<?php echo $row['Company_ID']; ?>">
-                    <!-- <a href="company.php"> -->
                         <button>
                             <span class="<?php echo 'btn-company-created'; ?>">
                                 <div class="circle-avatar">

@@ -29,14 +29,10 @@ if ($hasCompany) {
     $companyID = $row["Company_ID"];
     $companyName = $row["Company_name"];
     $companyLogo = $row["Company_logo"]; 
-}else{
-    header("Location: index.php");
-    exit();
 }
+
 $projectQuery = "SELECT * FROM project WHERE Company_ID = '$companyID' ORDER BY Project_date DESC";
 $resultProjects = mysqli_query($conn, $projectQuery);
-
-
 ?>
 
 

@@ -29,9 +29,6 @@ if ($hasCompany) {
     $companyID = $row["Company_ID"];
     $companyName = $row["Company_name"];
     $companyLogo = $row["Company_logo"]; 
-}else{
-    header("Location: index.php");
-    exit();
 }
 ?>
 

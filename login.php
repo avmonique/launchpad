@@ -1,15 +1,17 @@
 <?php
+
 require "config.php";
 
 if (!empty($_SESSION["email"])) {
     if ($_SESSION["user_type"] === "teacher") {
         header("Location: teacher-dashboard.php");
+        exit();
     } elseif ($_SESSION["user_type"] === "student") {
         header("Location: index.php");
+        exit();
     }
-    exit(); 
+    exit();
 }
-
 
 
 if (isset($_POST["login"])) {
