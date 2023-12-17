@@ -43,7 +43,7 @@
         }
     }
 
-    $projectQuery = "SELECT * FROM project WHERE Company_ID = '$companyID' ORDER BY Project_date DESC";
+    $projectQuery = "SELECT * FROM project WHERE Company_ID = '$selectedCompanyID' ORDER BY Project_date DESC";
     $resultProjects = mysqli_query($conn, $projectQuery);
     ?>
 

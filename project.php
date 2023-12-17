@@ -1,38 +1,63 @@
-<?php
-require "config.php";
+    <?php
+    require "config.php";
 
-if (empty($_SESSION["email"])) {
-    header("Location: login.php");
-    exit(); 
-}
+    if (empty($_SESSION["email"])) {
+        header("Location: login.php");
+        exit();
+    }
 
-$userEmail = $_SESSION["email"];
+    $userEmail = $_SESSION["email"];
+    $checkCompanyQuery = "SELECT c.*, s.Student_ID 
+                        FROM company_registration c
+                        INNER JOIN student_registration s ON c.Student_ID = s.Student_ID
+                        WHERE s.Student_email = '$userEmail'";
+
+    $resultCompany = mysqli_query($conn, $checkCompanyQuery);
+
+    $companies = [];
+
+    while ($row = mysqli_fetch_assoc($resultCompany)) {
+        $companies[] = $row;
+    }
+
+    $selectedCompanyID = isset($_GET['Company_id']) ? $_GET['Company_id'] : null;
+    $selectProjectID = isset($_GET['project_id']) ? $_GET['project_id'] : null;
 
 
-$checkCompanyQuery = "SELECT c.*, s.Student_ID 
-                      FROM company_registration c
-                      INNER JOIN student_registration s ON c.Student_ID = s.Student_ID
-                      WHERE s.Student_email = '$userEmail'";
+    $hasCompany = count($companies) > 0;
+    $companyID = "";
+    $companyName = "";
+    $companyLogo = "";
 
-$resultCompany = mysqli_query($conn, $checkCompanyQuery);
+    if ($selectedCompanyID) {
+        $selectedCompanyQuery = "SELECT * FROM company_registration WHERE Company_ID = ?";
+        $stmt = mysqli_prepare($conn, $selectedCompanyQuery);
+        mysqli_stmt_bind_param($stmt, "i", $selectedCompanyID);
+        mysqli_stmt_execute($stmt);
+        $resultSelectedCompany = mysqli_stmt_get_result($stmt);
 
-$hasCompany = mysqli_num_rows($resultCompany) > 0;
-$companyName = "";
-$companyLogo = "";
+        if ($resultSelectedCompany) {
+            $row = mysqli_fetch_assoc($resultSelectedCompany);
+            $companyID = $row["Company_ID"];
+            $companyName = $row["Company_name"];
+            $companyLogo = $row["Company_logo"];
+        }
+    }
+    if ($selectProjectID) {
+        $projectQuery = "SELECT * FROM project WHERE Project_ID = $selectProjectID";
+        $resultProject = mysqli_query($conn, $projectQuery);
+        $project = mysqli_fetch_assoc($resultProject);
 
-if ($hasCompany) {
-    $row = mysqli_fetch_assoc($resultCompany);
-    $companyName = $row["Company_name"];
-    $companyLogo = $row["Company_logo"]; 
-}
-?>
+    }
+    ?>  
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $hasCompany && !empty($companyName) ? $companyName." - Launchpad" : 'Create Company - Launchpad'; ?></title> 
+    <title><?php echo $project['Project_title']; ?></title> 
     <link rel="icon" href="/launchpad/images/favicon.ico" id="favicon">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="css/navbar.css">
@@ -82,36 +107,38 @@ if ($hasCompany) {
     </a>
                 <p class="divider-company">YOUR COMPANY</p>
                 <a href="create-company.php">
-                    <button>
-                        <span class="<?php echo 'btn-company-created'; ?>">
-                            <div class="circle-avatar">
-                                <img src="\launchpad\images\join-company-icon.png" alt="Join Company Icon">
-                            </div>
-                            <span class="create-company-text">
-                                Create your company
-                            </span>
-                        </span>
-                    </button>
-                </a>
-                <?php if ($hasCompany): ?>
-                <?php foreach ($resultCompany as $row): ?>
-                    <a href="<?php echo 'company.php'; ?>">
                         <button>
                             <span class="<?php echo 'btn-company-created'; ?>">
                                 <div class="circle-avatar">
-                                    <?php if (!empty($row['Company_logo'])): ?>
-                                        <img src="\launchpad\<?php echo $row['Company_logo']; ?>" alt="Company Logo" class="img-company">
-                                    <?php endif; ?>
+                                    <img src="\launchpad\images\join-company-icon.png" alt="Join Company Icon">
                                 </div>
                                 <span class="create-company-text">
-                                    <?php echo $row['Company_name']; ?>
+                                    Create your company
                                 </span>
                             </span>
                         </button>
                     </a>
-                <?php endforeach; ?>
-                <?php endif; ?>         
-
+                    <?php if ($hasCompany): ?>
+                    <?php foreach ($companies as $row): ?>
+                        <?php 
+                            $isActive = ($row['Company_ID'] == $project['Company_ID']) ? 'active' : '';
+                        ?>
+                        <a href="company_view.php?Company_id=<?php echo $row['Company_ID']; ?>" class="<?php echo $isActive; ?>">
+                            <button>
+                                <span class="<?php echo 'btn-company-created'; ?>">
+                                    <div class="circle-avatar">
+                                        <?php if (!empty($row['Company_logo'])): ?>
+                                            <img src="\launchpad\<?php echo $row['Company_logo']; ?>" alt="Company Logo" class="img-company">
+                                        <?php endif; ?>
+                                    </div>
+                                    <span class="create-company-text">
+                                        <?php echo $row['Company_name']; ?>
+                                    </span>
+                                </span>
+                            </button>
+                        </a>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
                 <p class="divider-company">COMPANIES YOU'VE JOINED</p>
                 <a href="#">
                 <button>
@@ -139,7 +166,7 @@ if ($hasCompany) {
 
 
         <div class="content">
-<h1><?php echo "" ?></h1>
-        </div>
+        <h1><?php echo $project['Project_title']; ?></h1>
+</div>  
 </body>
 </html>
